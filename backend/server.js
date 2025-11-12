@@ -8,6 +8,7 @@ import User from "./models/User.js";
 import Diagnosis from "./models/Diagnosis.js";  // ✅ NEW
 import crypto from "crypto";
 import nodemailer from "nodemailer";
+import { Resend } from 'resend';
 
 // Load environment variables
 dotenv.config();
@@ -46,13 +47,15 @@ app.post("/api/register", async (req, res) => {
 
     await newUser.save();
 
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
+    // const transporter = nodemailer.createTransport({
+    //   service: "gmail",
+    //   auth: {
+    //     user: process.env.EMAIL_USER,
+    //     pass: process.env.EMAIL_PASS,
+    //   },
+    // });
+
+    const resend = new Resend(process.env.KEY);
 
     // const verifyUrl = `http://localhost:5000/api/verify/${verificationToken}`;
 
@@ -60,8 +63,21 @@ app.post("/api/register", async (req, res) => {
 
     const verifyUrl = `${BASE_URL}/api/verify/${verificationToken}`;
 
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
+    // const mailOptions = {
+    //   from: process.env.EMAIL_USER,
+    //   to: email,
+    //   subject: "Verify your email",
+    //   html: `
+    //     <h2>Hello ${firstName},</h2>
+    //     <p>Thanks for registering! Please verify your email by clicking below:</p>
+    //     <a href="${verifyUrl}">Verify Email</a>
+    //   `,
+    // };
+
+    // await transporter.sendMail(mailOptions);
+
+    await resend.emails.send({
+      from: process.env.EM,
       to: email,
       subject: "Verify your email",
       html: `
@@ -69,9 +85,7 @@ app.post("/api/register", async (req, res) => {
         <p>Thanks for registering! Please verify your email by clicking below:</p>
         <a href="${verifyUrl}">Verify Email</a>
       `,
-    };
-
-    await transporter.sendMail(mailOptions);
+    })
     console.log(`📧 Verification email sent to: ${email}`);
     res.json({ message: "User registered! Check your email for verification link 📩" });
 
@@ -158,13 +172,26 @@ app.post("/api/forgot-password", async (req, res) => {
     // const resetUrl = `http://localhost:5000/reset/${resetToken}`;
     const resetUrl = `${BASE_URL}/reset/${resetToken}`;
 
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
-    });
+    // const transporter = nodemailer.createTransport({
+    //   service: "gmail",
+    //   auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
+    // });
 
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
+    const resend = new Resend(process.env.KEY);
+
+    // await transporter.sendMail({
+    //   from: process.env.EMAIL_USER,
+    //   to: email,
+    //   subject: "Password Reset Request",
+    //   html: `
+    //     <p>Click below to reset your password:</p>
+    //     <a href="${resetUrl}">Reset Password</a>
+    //     <p>Link expires in 15 minutes</p>
+    //   `,
+    // });
+
+    await resend.emails.send({
+      from: process.env.EM,
       to: email,
       subject: "Password Reset Request",
       html: `
@@ -173,6 +200,9 @@ app.post("/api/forgot-password", async (req, res) => {
         <p>Link expires in 15 minutes</p>
       `,
     });
+
+
+
 
     res.json({ message: "Password reset email sent 📧" });
   } catch (err) {
@@ -199,15 +229,24 @@ app.post("/api/resend-verification", async (req, res) => {
     // const verifyUrl = `http://localhost:5000/api/verify/${newToken}`;
     const verifyUrl = `${BASE_URL}/api/verify/${newToken}`;
 
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
+    // const transporter = nodemailer.createTransport({
+    //   service: "gmail",
+    //   auth: {
+    //     user: process.env.EMAIL_USER,
+    //     pass: process.env.EMAIL_PASS,
+    //   },
+    // });
 
-    await transporter.sendMail({
+    const resend = new Resend(process.env.KEY);
+
+    // await transporter.sendMail({
+    //   to: email,
+    //   subject: "Verify your email again",
+    //   html: `<p>Click <a href="${verifyUrl}">here</a> to verify your email.</p>`,
+    // });
+
+    await resend.emails.send({
+      from: process.env.EM,
       to: email,
       subject: "Verify your email again",
       html: `<p>Click <a href="${verifyUrl}">here</a> to verify your email.</p>`,
