@@ -76,7 +76,7 @@ app.post("/api/register", async (req, res) => {
 
     // await transporter.sendMail(mailOptions);
 
-    await resend.emails.send({
+    try {await resend.emails.send({
       from: process.env.EM,
       to: email,
       subject: "Verify your email",
@@ -87,7 +87,10 @@ app.post("/api/register", async (req, res) => {
       `,
     })
     console.log(`📧 Verification email sent to: ${email}`);
-    res.json({ message: "User registered! Check your email for verification link 📩" });
+    res.json({ message: "User registered! Check your email for verification link 📩" });}
+    catch{
+      console.error("❌ Resend error:", err);
+    }
 
   } catch (error) {
     if (error.code === 11000) {
@@ -192,7 +195,7 @@ app.post("/api/forgot-password", async (req, res) => {
     //   `,
     // });
 
-    await resend.emails.send({
+    try{await resend.emails.send({
       from: process.env.EM,
       to: email,
       subject: "Password Reset Request",
@@ -206,7 +209,8 @@ app.post("/api/forgot-password", async (req, res) => {
 
 
 
-    res.json({ message: "Password reset email sent 📧" });
+    res.json({ message: "Password reset email sent 📧" });}
+    catch{console.error("❌ Resend error:", err);}
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
@@ -249,7 +253,7 @@ app.post("/api/resend-verification", async (req, res) => {
     //   html: `<p>Click <a href="${verifyUrl}">here</a> to verify your email.</p>`,
     // });
 
-    await resend.emails.send({
+    try{await resend.emails.send({
       from: process.env.EM,
       to: email,
       subject: "Verify your email again",
@@ -257,7 +261,10 @@ app.post("/api/resend-verification", async (req, res) => {
     });
 
     console.log("📧 Verification email resent to:", email);
-    res.json({ message: "Verification email resent 📧" });
+    res.json({ message: "Verification email resent 📧" });}
+    catch{
+      console.error("❌ Resend error:", err);
+    }
 
   } catch (error) {
     console.error("Error resending verification:", error);
