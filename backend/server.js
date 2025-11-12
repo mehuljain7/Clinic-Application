@@ -25,6 +25,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // AUTH ROUTES (EXISTING)
 // ========================
 
+console.log("🔑 Using Resend key:", process.env.KEY ? "✅ loaded" : "❌ missing");
+console.log("📨 Using from address:", process.env.EM);
+
 app.post("/api/register", async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
 
