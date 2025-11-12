@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, Animated } from "react-native";
 import { theme } from "../theme";
 import Toast from "react-native-toast-message";
+import { NODE_BASE_URL } from "../config/api";
 
 export default function DiagnosisResultScreen({ route, navigation }) {
   const { inputs, results, userEmail, userName } = route.params;
@@ -23,7 +24,7 @@ export default function DiagnosisResultScreen({ route, navigation }) {
     setSaving(true);
 
     try {
-      const res = await fetch("http://localhost:5000/api/saveDiagnosis", {
+      const res = await fetch(`${NODE_BASE_URL}/api/saveDiagnosis`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
@@ -65,7 +66,7 @@ export default function DiagnosisResultScreen({ route, navigation }) {
     setGenerating(true);
 
     try {
-      const res = await fetch("http://localhost:5000/api/generatePDF", {
+      const res = await fetch(`${NODE_BASE_URL}/api/generatePDF`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ inputs, results }),

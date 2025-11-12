@@ -13,6 +13,7 @@ import Toast from "react-native-toast-message";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { theme } from "../theme";
+import { NODE_BASE_URL } from "../config/api";
 
 export default function ReportsListScreen() {
   const navigation = useNavigation();
@@ -39,7 +40,7 @@ export default function ReportsListScreen() {
         return;
       }
 
-      const response = await fetch(`http://localhost:5000/api/reports/${user.email}`);
+      const response = await fetch(`${NODE_BASE_URL}/api/reports/${user.email}`);
       const data = await response.json();
 
       if (response.ok) {

@@ -5,6 +5,7 @@ import Toast from "react-native-toast-message";
 import { useNavigation } from "@react-navigation/native";
 import { theme } from "../theme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { NODE_BASE_URL } from "../config/api";
 
 export default function LoginScreen() {
   const navigation = useNavigation();
@@ -19,7 +20,7 @@ export default function LoginScreen() {
     setShowResend(false);
 
     try {
-      const response = await fetch("http://localhost:5000/api/login", {
+      const response = await fetch(`${NODE_BASE_URL}/api/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -74,7 +75,7 @@ export default function LoginScreen() {
 
   const resendVerification = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/resend-verification", {
+      const res = await fetch(`${NODE_BASE_URL}/api/resend-verification`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
@@ -101,7 +102,7 @@ export default function LoginScreen() {
       return;
     }
     try {
-      const res = await fetch("http://localhost:5000/api/forgot-password", {
+      const res = await fetch(`${NODE_BASE_URL}/api/forgot-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),

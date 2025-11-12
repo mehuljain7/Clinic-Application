@@ -18,6 +18,7 @@ import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { theme } from "../theme";
 import { INTERNAL_SHARED_KEY } from "@env";
+import { FLASK_BASE_URL } from "../config/api";
 
 if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -95,7 +96,7 @@ export default function NewDiagnosisScreen() {
     );
 
     try {
-      const response = await fetch("http://localhost:3000/api/diagnose", {
+      const response = await fetch(`${FLASK_BASE_URL}/api/diagnose`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

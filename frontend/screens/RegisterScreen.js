@@ -4,6 +4,7 @@ import Toast from "react-native-toast-message";
 import { theme } from "../theme";
 import { useNavigation } from "@react-navigation/native";
 import { useRoute } from "@react-navigation/native";
+import { NODE_BASE_URL } from "../config/api";
 
 export default function RegisterScreen() {
   const route = useRoute();
@@ -21,7 +22,7 @@ export default function RegisterScreen() {
     if (loading) return;
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:5000/api/register", {
+      const response = await fetch(`${NODE_BASE_URL}/api/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ firstName, lastName, email, password }),
