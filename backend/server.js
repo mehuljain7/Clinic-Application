@@ -54,7 +54,11 @@ app.post("/api/register", async (req, res) => {
       },
     });
 
-    const verifyUrl = `http://localhost:5000/api/verify/${verificationToken}`;
+    // const verifyUrl = `http://localhost:5000/api/verify/${verificationToken}`;
+
+    const BASE_URL = process.env.BASE_URL || "http://localhost:5000";
+
+    const verifyUrl = `${BASE_URL}/api/verify/${verificationToken}`;
 
     const mailOptions = {
       from: process.env.EMAIL_USER,
@@ -151,7 +155,8 @@ app.post("/api/forgot-password", async (req, res) => {
     user.resetTokenExpiry = Date.now() + 15 * 60 * 1000;
     await user.save();
 
-    const resetUrl = `http://localhost:5000/reset/${resetToken}`;
+    // const resetUrl = `http://localhost:5000/reset/${resetToken}`;
+    const resetUrl = `${BASE_URL}/reset/${resetToken}`;
 
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -191,7 +196,8 @@ app.post("/api/resend-verification", async (req, res) => {
     user.verificationToken = newToken;
     await user.save();
 
-    const verifyUrl = `http://localhost:5000/api/verify/${newToken}`;
+    // const verifyUrl = `http://localhost:5000/api/verify/${newToken}`;
+    const verifyUrl = `${BASE_URL}/api/verify/${newToken}`;
 
     const transporter = nodemailer.createTransport({
       service: "gmail",
