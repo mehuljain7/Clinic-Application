@@ -88,7 +88,7 @@ app.post("/api/register", async (req, res) => {
     })
     console.log(`📧 Verification email sent to: ${email}`);
     res.json({ message: "User registered! Check your email for verification link 📩" });}
-    catch{
+    catch (err) {
       console.error("❌ Resend error:", err);
     }
 
@@ -210,7 +210,7 @@ app.post("/api/forgot-password", async (req, res) => {
 
 
     res.json({ message: "Password reset email sent 📧" });}
-    catch{console.error("❌ Resend error:", err);}
+    catch (err) {console.error("❌ Resend error:", err);}
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
@@ -262,7 +262,7 @@ app.post("/api/resend-verification", async (req, res) => {
 
     console.log("📧 Verification email resent to:", email);
     res.json({ message: "Verification email resent 📧" });}
-    catch{
+    catch (err) {
       console.error("❌ Resend error:", err);
     }
 
