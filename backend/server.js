@@ -169,6 +169,8 @@ app.post("/api/forgot-password", async (req, res) => {
     user.resetTokenExpiry = Date.now() + 15 * 60 * 1000;
     await user.save();
 
+    const BASE_URL = process.env.BASE_URL || "http://localhost:5000";
+
     // const resetUrl = `http://localhost:5000/reset/${resetToken}`;
     const resetUrl = `${BASE_URL}/reset/${resetToken}`;
 
@@ -225,6 +227,8 @@ app.post("/api/resend-verification", async (req, res) => {
     const newToken = crypto.randomBytes(32).toString("hex");
     user.verificationToken = newToken;
     await user.save();
+
+    const BASE_URL = process.env.BASE_URL || "http://localhost:5000";
 
     // const verifyUrl = `http://localhost:5000/api/verify/${newToken}`;
     const verifyUrl = `${BASE_URL}/api/verify/${newToken}`;
