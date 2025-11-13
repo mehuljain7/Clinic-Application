@@ -16,7 +16,8 @@
 // config/api.js
 
 // 🟢 Change these to your actual Render URLs:
-const PROD_NODE_URL = "https://clinic-application-nodejs.onrender.com";
+// const PROD_NODE_URL = "https://clinic-application-nodejs.onrender.com";
+const PROD_NODE_URL = "clinic-application-nodejs.up.railway.app"
 const PROD_FLASK_URL = "https://clinic-application.onrender.com";
 
 // 🧩 Local development ports
