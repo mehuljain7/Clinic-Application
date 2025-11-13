@@ -9,6 +9,9 @@ import Diagnosis from "./models/Diagnosis.js";  // ✅ NEW
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 import { Resend } from 'resend';
+import formData from "form-data";
+import Mailgun from "mailgun.js";
+
 
 // Load environment variables
 dotenv.config();
@@ -27,6 +30,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 console.log("🔑 Using Resend key:", process.env.KEY ? "✅ loaded" : "❌ missing");
 console.log("📨 Using from address:", process.env.EM);
+
+// Initialize Mailgun client (HTTPS API — works on Render)
+const mailgun = new Mailgun(formData);
+const mg = mailgun.client({
+  username: "api",
+  key: process.env.MAILGUN_API_KEY,
+});
+
 
 app.post("/api/register", async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
