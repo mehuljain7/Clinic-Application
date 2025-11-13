@@ -58,7 +58,7 @@ app.post("/api/register", async (req, res) => {
     //   },
     // });
 
-    const resend = new Resend(process.env.KEY);
+    // const resend = new Resend(process.env.KEY);
 
     // const verifyUrl = `http://localhost:5000/api/verify/${verificationToken}`;
 
@@ -79,8 +79,33 @@ app.post("/api/register", async (req, res) => {
 
     // await transporter.sendMail(mailOptions);
 
-    try {await resend.emails.send({
-      from: process.env.EM,
+    // try {await resend.emails.send({
+    //   from: process.env.EM,
+    //   to: email,
+    //   subject: "Verify your email",
+    //   html: `
+    //     <h2>Hello ${firstName},</h2>
+    //     <p>Thanks for registering! Please verify your email by clicking below:</p>
+    //     <a href="${verifyUrl}">Verify Email</a>
+    //   `,
+    // })
+    // console.log(`📧 Verification email sent to: ${email}`);
+    // res.json({ message: "User registered! Check your email for verification link 📩" });}
+    // catch (err) {
+    //   console.error("❌ Resend error:", err);
+    // }
+
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
+
+    const mailOptions = {
+      from: process.env.SMTP_FROM,
       to: email,
       subject: "Verify your email",
       html: `
@@ -88,12 +113,15 @@ app.post("/api/register", async (req, res) => {
         <p>Thanks for registering! Please verify your email by clicking below:</p>
         <a href="${verifyUrl}">Verify Email</a>
       `,
-    })
-    console.log(`📧 Verification email sent to: ${email}`);
-    res.json({ message: "User registered! Check your email for verification link 📩" });}
-    catch (err) {
-      console.error("❌ Resend error:", err);
-    }
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("❌ Email failed:", error);
+      } else {
+        console.log("✅ Email sent:", info.response);
+      }
+    });
 
   } catch (error) {
     if (error.code === 11000) {
@@ -185,7 +213,7 @@ app.post("/api/forgot-password", async (req, res) => {
     //   auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
     // });
 
-    const resend = new Resend(process.env.KEY);
+    // const resend = new Resend(process.env.KEY);
 
     // await transporter.sendMail({
     //   from: process.env.EMAIL_USER,
@@ -198,8 +226,34 @@ app.post("/api/forgot-password", async (req, res) => {
     //   `,
     // });
 
-    try{await resend.emails.send({
-      from: process.env.EM,
+    // try{await resend.emails.send({
+    //   from: process.env.EM,
+    //   to: email,
+    //   subject: "Password Reset Request",
+    //   html: `
+    //     <p>Click below to reset your password:</p>
+    //     <a href="${resetUrl}">Reset Password</a>
+    //     <p>Link expires in 15 minutes</p>
+    //   `,
+    // });
+
+
+
+
+    // res.json({ message: "Password reset email sent 📧" });}
+    // catch (err) {console.error("❌ Resend error:", err);}
+
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
+
+    const mailOptions = {
+      from: process.env.SMTP_FROM,
       to: email,
       subject: "Password Reset Request",
       html: `
@@ -207,13 +261,16 @@ app.post("/api/forgot-password", async (req, res) => {
         <a href="${resetUrl}">Reset Password</a>
         <p>Link expires in 15 minutes</p>
       `,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("❌ Email failed:", error);
+      } else {
+        console.log("✅ Email sent:", info.response);
+      }
     });
 
-
-
-
-    res.json({ message: "Password reset email sent 📧" });}
-    catch (err) {console.error("❌ Resend error:", err);}
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
@@ -248,7 +305,7 @@ app.post("/api/resend-verification", async (req, res) => {
     //   },
     // });
 
-    const resend = new Resend(process.env.KEY);
+    // const resend = new Resend(process.env.KEY);
 
     // await transporter.sendMail({
     //   to: email,
@@ -256,18 +313,42 @@ app.post("/api/resend-verification", async (req, res) => {
     //   html: `<p>Click <a href="${verifyUrl}">here</a> to verify your email.</p>`,
     // });
 
-    try{await resend.emails.send({
-      from: process.env.EM,
+    // try{await resend.emails.send({
+    //   from: process.env.EM,
+    //   to: email,
+    //   subject: "Verify your email again",
+    //   html: `<p>Click <a href="${verifyUrl}">here</a> to verify your email.</p>`,
+    // });
+
+    // console.log("📧 Verification email resent to:", email);
+    // res.json({ message: "Verification email resent 📧" });}
+    // catch (err) {
+    //   console.error("❌ Resend error:", err);
+    // }
+
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
+
+    const mailOptions = {
+      from: process.env.SMTP_FROM,
       to: email,
       subject: "Verify your email again",
       html: `<p>Click <a href="${verifyUrl}">here</a> to verify your email.</p>`,
-    });
+    };
 
-    console.log("📧 Verification email resent to:", email);
-    res.json({ message: "Verification email resent 📧" });}
-    catch (err) {
-      console.error("❌ Resend error:", err);
-    }
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("❌ Email failed:", error);
+      } else {
+        console.log("✅ Email sent:", info.response);
+      }
+    });
 
   } catch (error) {
     console.error("Error resending verification:", error);
