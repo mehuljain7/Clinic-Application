@@ -104,8 +104,27 @@ app.post("/api/register", async (req, res) => {
       },
     });
 
-    const mailOptions = {
-      from: process.env.SMTP_FROM,
+    // const mailOptions = {
+    //   from: process.env.SMTP_FROM,
+    //   to: email,
+    //   subject: "Verify your email",
+    //   html: `
+    //     <h2>Hello ${firstName},</h2>
+    //     <p>Thanks for registering! Please verify your email by clicking below:</p>
+    //     <a href="${verifyUrl}">Verify Email</a>
+    //   `,
+    // };
+
+    // transporter.sendMail(mailOptions, (error, info) => {
+    //   if (error) {
+    //     console.error("❌ Email failed:", error);
+    //   } else {
+    //     console.log("✅ Email sent:", info.response);
+    //   }
+    // });
+
+    await mg.messages.create(process.env.MAILGUN_DOMAIN, {
+      from: process.env.MAILGUN_FROM,
       to: email,
       subject: "Verify your email",
       html: `
@@ -113,15 +132,9 @@ app.post("/api/register", async (req, res) => {
         <p>Thanks for registering! Please verify your email by clicking below:</p>
         <a href="${verifyUrl}">Verify Email</a>
       `,
-    };
-
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error("❌ Email failed:", error);
-      } else {
-        console.log("✅ Email sent:", info.response);
-      }
     });
+    console.log(`📧 Verification email sent to: ${email}`);
+
 
   } catch (error) {
     if (error.code === 11000) {
@@ -243,33 +256,46 @@ app.post("/api/forgot-password", async (req, res) => {
     // res.json({ message: "Password reset email sent 📧" });}
     // catch (err) {console.error("❌ Resend error:", err);}
 
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: process.env.SMTP_PORT,
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-    });
+    // const transporter = nodemailer.createTransport({
+    //   host: process.env.SMTP_HOST,
+    //   port: process.env.SMTP_PORT,
+    //   auth: {
+    //     user: process.env.SMTP_USER,
+    //     pass: process.env.SMTP_PASS,
+    //   },
+    // });
 
-    const mailOptions = {
-      from: process.env.SMTP_FROM,
-      to: email,
-      subject: "Password Reset Request",
-      html: `
-        <p>Click below to reset your password:</p>
-        <a href="${resetUrl}">Reset Password</a>
-        <p>Link expires in 15 minutes</p>
-      `,
-    };
+    // const mailOptions = {
+    //   from: process.env.SMTP_FROM,
+    //   to: email,
+    //   subject: "Password Reset Request",
+    //   html: `
+    //     <p>Click below to reset your password:</p>
+    //     <a href="${resetUrl}">Reset Password</a>
+    //     <p>Link expires in 15 minutes</p>
+    //   `,
+    // };
 
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error("❌ Email failed:", error);
-      } else {
-        console.log("✅ Email sent:", info.response);
-      }
-    });
+    // transporter.sendMail(mailOptions, (error, info) => {
+    //   if (error) {
+    //     console.error("❌ Email failed:", error);
+    //   } else {
+    //     console.log("✅ Email sent:", info.response);
+    //   }
+    // });
+
+    await mg.messages.create(process.env.MAILGUN_DOMAIN, {
+  from: process.env.MAILGUN_FROM,
+  to: email,
+  subject: "Password Reset Request",
+  html: `
+    <p>Click below to reset your password:</p>
+    <a href="${resetUrl}">Reset Password</a>
+    <p>Link expires in 15 minutes.</p>
+  `,
+});
+console.log(`📧 Password reset email sent to: ${email}`);
+
 
   } catch (err) {
     console.error(err);
@@ -326,29 +352,38 @@ app.post("/api/resend-verification", async (req, res) => {
     //   console.error("❌ Resend error:", err);
     // }
 
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: process.env.SMTP_PORT,
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-    });
+    // const transporter = nodemailer.createTransport({
+    //   host: process.env.SMTP_HOST,
+    //   port: process.env.SMTP_PORT,
+    //   auth: {
+    //     user: process.env.SMTP_USER,
+    //     pass: process.env.SMTP_PASS,
+    //   },
+    // });
 
-    const mailOptions = {
-      from: process.env.SMTP_FROM,
-      to: email,
-      subject: "Verify your email again",
-      html: `<p>Click <a href="${verifyUrl}">here</a> to verify your email.</p>`,
-    };
+    // const mailOptions = {
+    //   from: process.env.SMTP_FROM,
+    //   to: email,
+    //   subject: "Verify your email again",
+    //   html: `<p>Click <a href="${verifyUrl}">here</a> to verify your email.</p>`,
+    // };
 
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error("❌ Email failed:", error);
-      } else {
-        console.log("✅ Email sent:", info.response);
-      }
-    });
+    // transporter.sendMail(mailOptions, (error, info) => {
+    //   if (error) {
+    //     console.error("❌ Email failed:", error);
+    //   } else {
+    //     console.log("✅ Email sent:", info.response);
+    //   }
+    // });
+
+    await mg.messages.create(process.env.MAILGUN_DOMAIN, {
+  from: process.env.MAILGUN_FROM,
+  to: email,
+  subject: "Verify your email again",
+  html: `<p>Click <a href="${verifyUrl}">here</a> to verify your email.</p>`,
+});
+console.log(`📧 Resent verification email to: ${email}`);
+
 
   } catch (error) {
     console.error("Error resending verification:", error);
