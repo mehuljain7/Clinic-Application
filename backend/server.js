@@ -1021,6 +1021,8 @@ app.use(cors({ origin: "*" }));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+const BASE_URL = process.env.BASE_URL || "http://localhost:5000";
+
 // ========================
 // AUTH ROUTES (EXISTING)
 // ========================
