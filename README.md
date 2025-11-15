@@ -44,6 +44,7 @@
   ![`Diagnosis Form`](source/image%203.png)
   `Diagnosis Form`
 - **Diagnosis Result**
+  
   ![`Diagnosis Result in action`](source/diagnosis.gif)
   `Diagnosis Result in action`
 
