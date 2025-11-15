@@ -46,6 +46,7 @@
 - **Diagnosis Result**
   
   ![`Diagnosis Result in action`](source/diagnosis.gif)
+  
   `Diagnosis Result in action`
 
 ## Email Screenshots
